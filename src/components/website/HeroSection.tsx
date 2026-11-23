@@ -1,10 +1,48 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 import HerosectionImage from "@/src/assets/images/HeroSectionImage.jpeg";
 const Hero = () => {
+  const [heroData, setHeroData] = useState<any>(null);
+  console.log("🚀 ~ Hero ~ heroData:", heroData);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchHeroData() {
+      try {
+        const response = await fetch(
+          "https://api.synnetinternational.com/api/v1/home",
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch hero content");
+        }
+
+        const data = await response.json();
+        setHeroData(data);
+      } catch (error) {
+        console.error(
+          "Error fetching hero data, using default fallback:",
+          error,
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchHeroData();
+  }, []);
+
+  const fullTitle =
+    heroData?.data?.title || "Strategic Advisory for, Growth & Success.";
+  const parts = fullTitle.split(",");
+  const mainTitle = parts[0];
+  const highlightedTitle = parts.slice(1).join(",");
+
   return (
     <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden bg-gray-900 py-16 px-4 sm:px-6 lg:px-8">
       <div className="absolute inset-0 z-0">
@@ -24,16 +62,15 @@ const Hero = () => {
             YOUR GROWTH. OUR STRATEGY. INTEGRATED SUCCESS
           </div>
 
-          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
-            Strategic Advisory for{" "}
-            <span className="text-[#ec3c6b]">Growth & Success.</span>
+          <h1 className="text-4xl font-bold text-white tracking-tight leading-tight">
+            {mainTitle}
+            {highlightedTitle && (
+              <span className="text-[#ec3c6b]">{highlightedTitle.trim()}</span>
+            )}
           </h1>
 
           <p className="text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed">
-            We deliver integrated consultancy solutions across Real Estate,
-            Business Strategy, Legal Services & Management, Tax & Audits
-            Activity and Insurance — helping organizations grow, stay compliant
-            and perform with confidence.
+            {heroData?.data?.description}
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -63,7 +100,7 @@ const Hero = () => {
         <div className="lg:col-span-5 flex justify-center lg:justify-end">
           <div className="relative  w-full max-w-md h-[450px] rounded-3xl overflow-hidden shadow-2xl border border-white/10 group">
             <Image
-              src={HerosectionImage}
+              src={heroData?.data?.image?.url}
               alt="Consulting Team"
               fill
               className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
