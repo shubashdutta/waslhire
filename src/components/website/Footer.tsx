@@ -67,13 +67,13 @@ const TwitterIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
 );
 
 const QUICK_LINKS = [
-  { label: "About Us", href: "/#about" },
-  { label: "Our Services", href: "/#services" },
-  { label: "Global Coverage", href: "/#global-reach" },
-  { label: "Recruitment Process", href: "/#process" },
+  { label: "About Us", href: "/about-us" },
+  { label: "Our Services", href: "/services" },
+  { label: "Global Coverage", href: "/global-reach" },
+  { label: "Recruitment Process", href: "/recruitment-process" },
   { label: "Testimonials", href: "/#testimonials" },
   { label: "FAQ", href: "/#faq" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "Contact Us", href: "/contact-us" },
 ];
 
 const SPECIALTIES = [
